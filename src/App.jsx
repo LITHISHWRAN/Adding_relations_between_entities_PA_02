@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import ProductCard from './components/ProductCard';
-import './App.css';
+import  { useState } from "react";
+import ProductCard from "./components/productCard";
+import '../src/App.css';
 
-const initialProducts = [
+const App = () => {
+  const [products, setProducts] = useState([
   {
     id: 1,
     name: "Wireless Headphones",
@@ -26,18 +27,32 @@ const initialProducts = [
     image: "https://picsum.photos/300/200?random=3",
     avgRating: 4.5,
     totalRatings: 8
-  }
-];
+  }])
 
-function App() {
-
- 
+  const handleRatingSubmit = (productId, newRating) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === productId
+          ? {
+              ...product,
+              avgRating: ((product.avgRating * product.totalRatings + newRating) / (product.totalRatings + 1)).toFixed(1),
+              totalRatings: product.totalRatings + 1,
+            }
+          : product
+      )
+    );
+  };
 
   return (
+    <div className="main">
     <div>
-     {/* code here */}
+      <h1>Product Ratings</h1>
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} onRatingSubmit={handleRatingSubmit} />
+      ))}
+      </div>
     </div>
   );
-}
+};
 
 export default App;
